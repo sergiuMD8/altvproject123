@@ -1,0 +1,90 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\code\\server1\\resources\\AltvServeru\\AltvServeru.csproj": {}
+  },
+  "projects": {
+    "C:\\code\\server1\\resources\\AltvServeru\\AltvServeru.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\code\\server1\\resources\\AltvServeru\\AltvServeru.csproj",
+        "projectName": "AltvServeru",
+        "projectPath": "C:\\code\\server1\\resources\\AltvServeru\\AltvServeru.csproj",
+        "packagesPath": "C:\\Users\\sergiu\\.nuget\\packages\\",
+        "outputPath": "C:\\code\\server1\\resources\\AltvServeru\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\sergiu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "AltV.Net": {
+              "target": "Package",
+              "version": "[16.0.10, )"
+            },
+            "AltV.Net.Async": {
+              "target": "Package",
+              "version": "[16.0.10, )"
+            },
+            "AltV.Net.Resources.Chat.Api": {
+              "target": "Package",
+              "version": "[16.0.10, )"
+            },
+            "AltV.Net.Shared": {
+              "target": "Package",
+              "version": "[16.0.10, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.3.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
