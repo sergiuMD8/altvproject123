@@ -95,6 +95,13 @@ namespace AltvServeru
             return ;
         }
 
+        [Command("fraktioninfo")]
+        public void CMD_fraktioninfo(TPlayer.TPlayer tplayer)
+        {
+            tplayer.SendChatMessage($"Вы находитесь в фракции {tplayer.PFrakionName()} на должности {tplayer.PRangName()}!");
+            return ;
+        }
+
        
 
     }
