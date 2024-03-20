@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AltV.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AltvServeru
 {
-    class Utils
+    class Utils : IScript
     {
         public static void adminLog(string text, string username)
         {
@@ -23,6 +24,18 @@ namespace AltvServeru
                 }
 
             });
+        }
+
+        public static TPlayer.TPlayer GetPlayerByName(string name)
+        {
+            foreach(TPlayer.TPlayer p in Alt.GetAllPlayers())
+            {
+                if (p.Name.ToLower().Contains(name.ToLower())) 
+                {
+                return p;
+                }
+            }
+            return null;
         }
     }
 }

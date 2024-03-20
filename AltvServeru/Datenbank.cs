@@ -1,4 +1,5 @@
 ﻿using AltV.Net;
+using AltV.Net.Resources.Chat.Api;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI;
 using System;
@@ -117,13 +118,14 @@ namespace AltvServeru
         public static void AccountUpdate(TPlayer.TPlayer tplayer)
         {
             MySqlCommand command = Connection.CreateCommand();
-            command.CommandText = "UPDATE account SET adminlevel=@adminlevel, geld=@geld, fraktion=@fraktion, rang=@rang WHERE id=@id";
+            command.CommandText = "UPDATE accounts SET adminlevel=@adminlevel, geld=@geld, fraktion=@fraktion, rang=@rang WHERE id=@id";
 
             command.Parameters.AddWithValue("@adminlevel", tplayer.Adminlevel);
             command.Parameters.AddWithValue("@geld", tplayer.Geld);
             command.Parameters.AddWithValue("@fraktion", tplayer.Fraktion);
             command.Parameters.AddWithValue("@rang", tplayer.Rang);
             command.Parameters.AddWithValue("id",tplayer.PlayerID);
+            command.ExecuteNonQuery();
         }
 
         public static bool PasswordCheck(string name, string passwordinput)

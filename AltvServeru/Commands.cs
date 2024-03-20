@@ -102,6 +102,90 @@ namespace AltvServeru
             return ;
         }
 
+        [Command("makeleader")]
+        public void CMD_makeleader(TPlayer.TPlayer tplayer, string playertarget, int frak)
+        {
+            if (!tplayer.IsPlayerAdmin((int)TPlayer.TPlayer.AdminRanks.Administrator))
+            {
+                tplayer.SendChatMessage("{FF0000} Ваш уровень администратора слижком низкий");
+                return;
+
+            }
+            TPlayer.TPlayer target = Utils.GetPlayerByName(playertarget);
+            if (target == null)
+            {
+                tplayer.SendChatMessage("{FF0000} Игрок не найден!");
+                return;
+            }
+            if(frak < 0 || frak > TPlayer.TPlayer.Fraktionen.Length)
+            {
+                tplayer.SendChatMessage("{FF0000} Нет фракции!");
+            }
+            target.Fraktion = frak;
+            target.Rang = 5;
+            Datebank.AccountUpdate(tplayer);
+            tplayer.SendChatMessage($"Вы заначили {target.Name} лидером фракции {TPlayer.TPlayer.Fraktionen[frak]}");
+            target.SendChatMessage($"{tplayer.Name} вы стали лидером фракции {TPlayer.TPlayer.Fraktionen[frak]}");
+
+        }
+
+        [Command("invite")]
+        public void CMD_invite(TPlayer.TPlayer tplayer, string playertarget)
+        {
+            if(tplayer.Fraktion == 0 || tplayer.Rang < 5)
+            {
+                tplayer.SendChatMessage("{FF0000}Вы не состоите в фракции или ваш ранг слижком низкий!");
+                return ;
+            }
+            TPlayer.TPlayer target = Utils.GetPlayerByName(playertarget);
+            if (target == null)
+            {
+                tplayer.SendChatMessage("{FF0000} Недействительный игрок");
+                return;
+            }
+            target.Fraktion = tplayer.Fraktion;
+            target.Rang = 1;
+            Datebank.AccountUpdate(tplayer);
+            tplayer.SendChatMessage($"Вы пригласили {target.Name} в фракцию {TPlayer.TPlayer.Fraktionen[tplayer.Fraktion]}");
+            target.SendChatMessage($"{tplayer.Name} вы стали членом фракции {TPlayer.TPlayer.Fraktionen[tplayer.Fraktion]}");
+
+        }
+
+
+        [Command("setrang")]
+        public void CMD_setrang(TPlayer.TPlayer tplayer)
+
+        {
+            if (!tplayer.IsPlayerAdmin((int)TPlayer.TPlayer.AdminRanks.Administrator))
+            {
+                tplayer.SendChatMessage("{FF0000} Ваш уровень администратора слижком низкий");
+                return;
+
+            }
+            tplayer.Rang = 2;
+            Datebank.AccountUpdate(tplayer);
+            tplayer.SendChatMessage($"Ваш ранг был повышен!");
+            return;
+        }
+
+
+
+
+
+        [Command("pistol")]
+        public void CMD_pistol(TPlayer.TPlayer tplayer)
+        {
+            if(tplayer.Fraktion != 1)
+            {
+                string msg = "{FF0000} Вы не работаете в LSPD";
+                tplayer.SendChatMessage (msg);
+                return ;
+            }
+            tplayer.GiveWeapon(AltV.Net.Enums.WeaponModel.HeavyRevolverMkII, 15, true);
+            tplayer.SendChatMessage("{04B404}Вы получили оружие!");
+                
+        }
+
        
 
     }
