@@ -8,6 +8,7 @@ import * as native from "natives"
 //Variable
 
 let loginHud;
+let guiHud;
 //===========================================================//
 
 
@@ -39,6 +40,10 @@ alt.onServer('SendErrorMessage', (text) => {
 //===========================================================//
 
 alt.on('connectionComplete', () => {
+    loadBlips();
+
+
+    guiHud = new alt.WebView("http://resources/AltvServeruClientside/gui/gui.html");
     loginHud = new alt.WebView("http://resources/AltvServeruClientside/login/login.html");
     loginHud.focus();
 
@@ -54,3 +59,24 @@ alt.on('connectionComplete', () => {
         alt.emitServer('Event.Register', name, password)
     })
 })
+
+alt.onServer('sendNotification', (statusCode, text) => {
+    guiHud.emit('sendNotification', statusCode, text);
+});
+
+function loadBlips()
+{
+    createBlip(496, 5499, 774,8,29,1.0,false,"spawn");
+}
+
+function createBlip(x,y,z,sprite,color,scale=1.0,shortRange=false, name="")
+{
+    const tempBlip = new alt.PointBlip(x,y,z);
+
+    tempBloop.sprite =sprite;
+    tempBlip.color = color;
+    tempBlip.shortRange = shortRange;
+    tempBlip.scale = scale;
+    if(name,length > 0)
+    tempBlip.name = name;
+}

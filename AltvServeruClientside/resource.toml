@@ -1,3 +1,7 @@
 type = 'js'
 client-main = 'client/index.js'
-client-files = [ 'client/*', 'shared/*','login/*' ]
+client-files = [ 
+	'client/*', 
+	'shared/*',
+	'login/*',
+	'gui/*' ]

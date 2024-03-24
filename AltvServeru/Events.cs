@@ -12,7 +12,7 @@ namespace AltvServeru
         public void OnPlayerConnect(TPlayer.TPlayer tplayer, String reason) 
         {
             Alt.Log($"Игрок {tplayer.Name} подключился к серверу");
-            tplayer.Spawn(new AltV.Net.Data.Position(522, 250, 105), 0);
+            tplayer.Spawn(new AltV.Net.Data.Position(496, 5499, 774), 0);
             tplayer.Model = (uint)PedModel.JoshCutscene;
         }
 
@@ -33,7 +33,7 @@ namespace AltvServeru
                 {
                     tplayer.PlayerName = name;
                     Datebank.NewAccountRegistration(name, password);
-                    tplayer.Spawn(new AltV.Net.Data.Position(522, 250, 105), 0);
+                    tplayer.Spawn(new AltV.Net.Data.Position(496, 5499, 774), 0);
                     tplayer.Model = (uint)PedModel.JoshCutscene;
                     tplayer.Einloggt = true;
                     tplayer.Emit("CloseLoginHud");
@@ -59,7 +59,7 @@ namespace AltvServeru
                     {
                         tplayer.PlayerName = name;
                         Datebank.AccountLaden(tplayer);
-                        tplayer.Spawn(new AltV.Net.Data.Position(522, 250, 105), 0);
+                        tplayer.Spawn(new AltV.Net.Data.Position(496, 5499, 774), 0);
                         tplayer.Model = (uint)PedModel.JoshCutscene;
                         tplayer.Einloggt = true;
                         tplayer.Emit("CloseLoginHud");

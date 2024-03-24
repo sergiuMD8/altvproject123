@@ -37,5 +37,10 @@ namespace AltvServeru
             }
             return null;
         }
+
+        public static void sendNotification(TPlayer.TPlayer tplayer, string statusCode, string text)
+        {
+            tplayer.Emit("sendNotification", statusCode, text);
+        }
     }
 }

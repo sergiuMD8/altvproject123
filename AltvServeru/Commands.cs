@@ -1,6 +1,7 @@
 ﻿using AltV.Net;
 using AltV.Net.Elements.Entities;
 using AltV.Net.Resources.Chat.Api;
+using System.Globalization;
 using System.Numerics;
 
 namespace AltvServeru
@@ -29,12 +30,14 @@ namespace AltvServeru
             {
                 veh.PrimaryColorRgb = new AltV.Net.Data.Rgba((byte)R, (byte)G, (byte)B, 255);
                 tplayer.SendChatMessage(" {04B404}Ваш транспорт создан");
+                Utils.adminLog($"Игрок с ником {tplayer.PlayerName} заспавнил себе транспорт {VehicleName}", "AltV server");
+                Utils.sendNotification(tplayer, "info", "Ваш автомобиль был создан");
             }
             else
             {
-                tplayer.SendChatMessage(" {FF0000} Неврзможно создать транспорт");
+                Utils.sendNotification(tplayer, "error", "Невозможно создать транспорт");
             }
-            Utils.adminLog($"Игрок с ником {tplayer.PlayerName} заспавнил себе транспорт {VehicleName}", "AltV server");
+            
         }
 
         [Command("freezeme")]
@@ -95,39 +98,14 @@ namespace AltvServeru
             return ;
         }
 
-        [Command("fraktioninfo")]
+        [Command("finfo")]
         public void CMD_fraktioninfo(TPlayer.TPlayer tplayer)
         {
-            tplayer.SendChatMessage($"Вы находитесь в фракции {tplayer.PFrakionName()} на должности {tplayer.PRangName()}!");
+            Utils.sendNotification(tplayer, "info", $"Вы находитесь в фракции {tplayer.PFrakionName()} на должности {tplayer.PRangName()}!");
             return ;
         }
 
-        [Command("makeleader")]
-        public void CMD_makeleader(TPlayer.TPlayer tplayer, string playertarget, int frak)
-        {
-            if (!tplayer.IsPlayerAdmin((int)TPlayer.TPlayer.AdminRanks.Administrator))
-            {
-                tplayer.SendChatMessage("{FF0000} Ваш уровень администратора слижком низкий");
-                return;
-
-            }
-            TPlayer.TPlayer target = Utils.GetPlayerByName(playertarget);
-            if (target == null)
-            {
-                tplayer.SendChatMessage("{FF0000} Игрок не найден!");
-                return;
-            }
-            if(frak < 0 || frak > TPlayer.TPlayer.Fraktionen.Length)
-            {
-                tplayer.SendChatMessage("{FF0000} Нет фракции!");
-            }
-            target.Fraktion = frak;
-            target.Rang = 5;
-            Datebank.AccountUpdate(tplayer);
-            tplayer.SendChatMessage($"Вы заначили {target.Name} лидером фракции {TPlayer.TPlayer.Fraktionen[frak]}");
-            target.SendChatMessage($"{tplayer.Name} вы стали лидером фракции {TPlayer.TPlayer.Fraktionen[frak]}");
-
-        }
+       
 
         [Command("invite")]
         public void CMD_invite(TPlayer.TPlayer tplayer, string playertarget)
@@ -145,29 +123,33 @@ namespace AltvServeru
             }
             target.Fraktion = tplayer.Fraktion;
             target.Rang = 1;
-            Datebank.AccountUpdate(tplayer);
+            Datebank.AccountUpdate(target);
             tplayer.SendChatMessage($"Вы пригласили {target.Name} в фракцию {TPlayer.TPlayer.Fraktionen[tplayer.Fraktion]}");
-            target.SendChatMessage($"{tplayer.Name} вы стали членом фракции {TPlayer.TPlayer.Fraktionen[tplayer.Fraktion]}");
+            target.SendChatMessage($"{target.Name} вы стали членом фракции {TPlayer.TPlayer.Fraktionen[tplayer.Fraktion]}");
 
         }
 
 
-        [Command("setrang")]
-        public void CMD_setrang(TPlayer.TPlayer tplayer)
-
+        [Command("makeleader")]
+        public void CMD_makeleader(TPlayer.TPlayer tplayer, string playertarget )
         {
-            if (!tplayer.IsPlayerAdmin((int)TPlayer.TPlayer.AdminRanks.Administrator))
+            if (tplayer.Fraktion == 0 )
             {
-                tplayer.SendChatMessage("{FF0000} Ваш уровень администратора слижком низкий");
+                tplayer.SendChatMessage("{FF0000}Вы не в фракции!");
                 return;
-
             }
-            tplayer.Rang = 2;
-            Datebank.AccountUpdate(tplayer);
-            tplayer.SendChatMessage($"Ваш ранг был повышен!");
-            return;
-        }
+            TPlayer.TPlayer target = Utils.GetPlayerByName(playertarget);
+            if (target == null)
+            {
+                tplayer.SendChatMessage("{FF0000} Недействительный игрок");
+                return;
+            }
+            target.Rang = 5;
+            Datebank.AccountUpdate(target);
+            tplayer.SendChatMessage($"Вы пригласили {target.Name} в фракцию {TPlayer.TPlayer.Fraktionen[tplayer.Fraktion]}");
+            target.SendChatMessage($"{target.Name} вы стали членом фракции {TPlayer.TPlayer.Fraktionen[tplayer.Fraktion]}");
 
+        }
 
 
 
@@ -183,9 +165,32 @@ namespace AltvServeru
             }
             tplayer.GiveWeapon(AltV.Net.Enums.WeaponModel.HeavyRevolverMkII, 15, true);
             tplayer.SendChatMessage("{04B404}Вы получили оружие!");
-                
+            Utils.sendNotification(tplayer, "info", $"Вы получили {AltV.Net.Enums.WeaponModel.HeavyRevolverMkII}!");
+
         }
 
+
+        [Command("save", greedyArg: true)]
+        public void CMD_save(TPlayer.TPlayer tplayer, string position)
+        {
+            if(!tplayer.IsPlayerAdmin((int)TPlayer.TPlayer.AdminRanks.Moderator))
+            {
+                tplayer.SendChatMessage("{FF0000}Ваш уровень администратора слижком низкий");
+                return;
+            }
+
+            string status = (tplayer.IsInVehicle) ? "В машине" : "Пешком";
+            Vector3 pos = (tplayer.IsInVehicle) ? tplayer.Vehicle.Position : tplayer.Position;
+            Vector3 rot = (tplayer.IsInVehicle) ? tplayer.Vehicle.Rotation : tplayer.Rotation;
+
+            string message =
+                $"{status} -> {position}: {pos.X.ToString(new CultureInfo("en-US")):N3}, {pos.Y.ToString(new CultureInfo("en-Us")):N3},{pos.Z.ToString(new CultureInfo("en-Us")):N3}";
+            tplayer.SendChatMessage (message);
+            using (StreamWriter file = new StreamWriter(@"./savedpositions.txt",true))
+            {
+                file.WriteLine(message);
+            }
+        }
        
 
     }
